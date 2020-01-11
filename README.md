@@ -1,10 +1,10 @@
 ---
 page_type: sample
 languages:
-- csharp
+- java
 products:
-- dotnet
-description: "Add 150 character max description"
+- app service
+description: "How to deploy Wildfly applications onto App Service"
 urlFragment: "update-this-to-unique-url-stub"
 ---
 
