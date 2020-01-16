@@ -1,0 +1,3 @@
+[submodule "sample/agoncal-application-petstore-ee7"]
+	path = sample/agoncal-application-petstore-ee7
+	url = https://github.com/agoncal/agoncal-application-petstore-ee7.git
