@@ -35,26 +35,124 @@ Outline the file contents of the repository. It helps users navigate the codebas
 
 ## Prerequisites
 
-You should have the following tools installed on your local machine.
+You should have the following development tools installed on your local machine.
 
 - [Docker](https://docs.docker.com/install/)
 - [VS Code](https://code.visualstudio.com/)
-- [Maven](https://maven.apache.org/download.cgi)
+- [Maven](https://maven.apache.org/download.cgi) (optional)
 
-## Setup
+You will also need accounts for the following services
 
-... Coming soon.
-<!--
-Explain how to prepare the sample once the user clones or downloads the repository. The section should outline every step necessary to install dependencies and set up any settings (for example, API keys and output folders).
--->
+- [Microsoft Azure](https://azure.microsoft.com/)
+- A container registry such as [DockerHub](https://hub.docker.com/) or [Azure Container Registry](https://azure.microsoft.com/services/container-registry/)
 
 ## Running the sample
 
-... Coming soon.
+### Build and test locally
 
 <!-- 
 Outline step-by-step instructions to execute the sample and see its output. Include steps for executing the sample from the IDE, starting specific services in the Azure portal or anything related to the overall launch of the code.
 -->
+
+First, build the image using using Docker.
+
+```shell
+docker build -t wildfly .
+```
+
+Next, run the container.
+
+```shell
+docker run wildfly 8080:80
+```
+
+TODO:
+- You should see blank
+- SSH into the container?
+
+### Push to a container registry
+
+Now that the container works locally, we will push the container to our registry so our Web App for Containers can pull it down in the next step. First, create a container registry on DockerHub or Azure Container Registry (ACR) by following either of the guides below.
+
+- [Create a public DockerHub container registry](https://docs.docker.com/docker-hub/repos/)
+- [Create a private Azure Container Registry](https://docs.microsoft.com/azure/container-registry/container-registry-get-started-portal)
+
+Once your registry is created, log into the registry. The commands will differ slightly for DockerHub and ACR. If your registry is on DockerHub, log in with docker using the command below. Enter your username and password when prompted.
+
+```shell
+docker login
+```
+
+If your registry is on ACR, log in with the Azure CLI using the command below.
+
+```shell
+az acr login --name <your-registry-name>
+```
+
+Once you are logged in, push the image to your registry using docker. This command is the same for both DockerHub and ACR registries.
+
+```shell
+docker push <your-registry-name>/wildfly
+```
+
+### Deploy the container to Web App for Containers
+
+If you have not already, create a Web App for Container using the Azure CLI. This command will create your Web App and configure it to use your Wildfly image. If you do not already have an App Service Plan, you can use `az appservice plan create` to create one.
+
+```shell
+az webapp create --name <your-desired-name> --plan <your-app-service-plan> -g <your-resource-group> -i <your-registry-name>/wildfly
+```
+
+Once the Web App has been deployed, open your browser to https://\<your-desired-name>.azurewebsites.net/. You will see [index.jsp](/tmp/index.jsp).
+
+![Example showing the JSP](/images/jsp_example.PNG)
+
+### Deploy an application on Wildfly
+
+Now that the Wildfly runtime is functioning on App Service, we will deploy a sample WAR application onto Wildfly. First, build the application using Maven.
+
+```shell
+cd sample/agoncal-application-petstore-ee7
+mvn clean install -DskipTests
+```
+
+Before deploying the built application, we need to configure our Web App to use the service's shared file storage. This will allow us to deploy artifacts using App Service's REST APIs. Your Web App already has an application setting named `WEBSITES_ENABLE_APP_SERVICE_STORAGE` with a value of `false`. Using the Azure Portal or CLI, change this setting's value to `true`.
+
+Next, deploy the WAR file using App Service's REST APIs for deployment. For WAR applications, use [`/api/wardeploy/`](https://docs.microsoft.com/azure/app-service/deploy-zip#deploy-war-file). The username and password for the following command are from your Web App's publish profile.
+
+```shell
+curl -X Post -u <username> --data-binary @"target/applicationPetstore.war" https://<your-app-name>.scm.azurewebsites.net/api/wardeploy
+```
+
+If you are using PowerShell, there is a Azure commandlet for WAR deploy.
+
+```shell
+Publish-AzWebapp -ResourceGroupName <group-name> -Name <app-name> -ArchivePath "target\applicationPetstore.war"
+```
+
+Once the deployment completes, browse to your application and you will see the Pet Store application has replaced the default index.jsp from earlier.
+
+![Pet Store application running on the Wildfly image](images/petstore-example.PNG)
+
+## Next steps
+
+Congratulations! You now have a Wildfly image in your container registry and running on App Service. Finally, you deployed a WAR application to the image.
+
+### Deploy your own WAR application
+
+In this sample we deployed an example WAR application. You will likely want to deploy your own apps onto Wildfly. To do so, you can use WAR deploy again with our own artifact.
+
+### SSH into the image
+
+The Dockerfile has been configured to allow SSH using App Service's native APIs. To SSH into the container, go the Azure Portal and select your Web App. Under **Development Tools** select the option for **SSH**.
+
+### Build the application with the image
+
+In this sample, we deployed our WAR application onto the running image using App Service's `/api/wardeploy/` endpoint. Alternatively, you can modify your Dockerfile to build your app and copy the WAR file. This will couple the container image with the WAR application(s).
+
+### Change the Wildfly version
+
+This sample uses Wildfly 14. You can use a different version of Wildfly by modifying the Dockerfile. See [the Wildfly downloads site](https://wildfly.org/downloads/) for a full list of available Wildfly versions.
 
 ## Key concepts
 
