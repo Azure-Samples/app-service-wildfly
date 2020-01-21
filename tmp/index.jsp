@@ -52,8 +52,8 @@
                 <div class=" extra-pl-small-scr offset-xl-1 offset-lg-1 offset-md-2 offset-sm-2 offset-xs-4 col-xl-5 col-lg-5 col-md-10 col-sm-11 col-xs-11 div-vertical-center">
                     <div class="container-fluid">
                         <div class="row">
-                            <h4>The Wildfly container is running.</h4>
-                            <p>Now it's time to deploy the sample WAR application. See the next step in README.md for instructions.</p>
+                            <h4>The Wildfly container is running.</h4><br>
+                            <p>Now it's time to deploy the sample WAR application. See the next step in README.md for instructions.</p><br>
                             <b>Java Information:</b>
                         </div>
                         <div class="row">
