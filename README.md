@@ -18,7 +18,7 @@ Guidance on onboarding samples to docs.microsoft.com/samples: https://review.doc
 Taxonomies for products and languages: https://review.docs.microsoft.com/new-hope/information-architecture/metadata/taxonomies?branch=master
 -->
 
-This repo shows how to deploy your Wildfly applications onto App Service.
+This repository shows how to build and run your own Wildfly container image on Azure App Service. Once the container is running on App Service, you can deploy your WAR applications onto the container using App Service's REST APIs for publishing.
 
 ## Contents
 
@@ -54,25 +54,18 @@ You will also need accounts for the following services
 Outline step-by-step instructions to execute the sample and see its output. Include steps for executing the sample from the IDE, starting specific services in the Azure portal or anything related to the overall launch of the code.
 -->
 
-First, build the image using using Docker.
+Before deploying to App Service, we will build and run the image locally.
 
 ```shell
 docker build -t wildfly .
+docker run -p 8080:80 wildfly 
 ```
 
-Next, run the container.
-
-```shell
-docker run wildfly 8080:80
-```
-
-TODO:
-- You should see blank
-- SSH into the container?
+Open a browser to [http://127.0.0.1:8080/](http://127.0.0.1:8080/) and will see [`index.jsp`](tmp/index.jsp) rendered by Wildfly.
 
 ### Push to a container registry
 
-Now that the container works locally, we will push the container to our registry so our Web App for Containers can pull it down in the next step. First, create a container registry on DockerHub or Azure Container Registry (ACR) by following either of the guides below.
+Now that the container works locally, we will push the container to our registry so our Web App for Containers can pull it in the next step. First, create a container registry on DockerHub or Azure Container Registry (ACR) by following either of the guides below.
 
 - [Create a public DockerHub container registry](https://docs.docker.com/docker-hub/repos/)
 - [Create a private Azure Container Registry](https://docs.microsoft.com/azure/container-registry/container-registry-get-started-portal)
@@ -160,6 +153,14 @@ Please see the pages below for more information on the technologies used.
 
 - [Wildfly](https://www.wildfly.org/)
 - [Web App for Containers](https://azure.microsoft.com/services/app-service/containers/)
+  - [Documentation](https://docs.microsoft.com/azure/app-service/containers/app-service-linux-intro)
+
+## Support
+
+The base image in the sample Dockerfile uses a Azul Zulu Enterprise build of the OpenJDK. By using Azul Zulu, you get free maintenance updates and you can resolve support issues with Microsoft. This support does not extend to the Wildfly runtime. See the links below for more information about Azul Zulu Enterprise for Azure.
+
+- [Java long-term support for Azure and Azure Stack](https://docs.microsoft.com/java/azure/jdk/)
+- [Java Docker images for Azure](https://docs.microsoft.com/java/azure/jdk/java-jdk-docker-images)
 
 ## Contributing
 

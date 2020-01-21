@@ -1,8 +1,8 @@
 
 ### This sample Dockerfile shows how to build a Wildfly image for use on Azure 
 ### App Service. The base image uses the Azul JRE, which receives free support
-### when used on Azure. 
-### For more information about Azul on Azure: 
+### when used on Azure. For more information about Azul on Azure: 
+### https://docs.microsoft.com/en-us/java/azure/jdk/
 
 FROM mcr.microsoft.com/java/jre-headless:8u212-zulu-alpine-with-tools
 
