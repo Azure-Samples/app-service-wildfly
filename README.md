@@ -54,14 +54,14 @@ You will also need accounts for the following services
 Outline step-by-step instructions to execute the sample and see its output. Include steps for executing the sample from the IDE, starting specific services in the Azure portal or anything related to the overall launch of the code.
 -->
 
-Before deploying to App Service, we will build and run the image locally.
+Before deploying to App Service, build and run the image locally.
 
 ```shell
 docker build -t wildfly .
 docker run -p 8080:80 wildfly 
 ```
 
-Open a browser to [http://127.0.0.1:8080/](http://127.0.0.1:8080/) and will see [`index.jsp`](tmp/index.jsp) rendered by Wildfly.
+Open a browser to [http://127.0.0.1:8080/](http://127.0.0.1:8080/) and [`index.jsp`](tmp/index.jsp) will be rendered by Wildfly.
 
 ### Push to a container registry
 
