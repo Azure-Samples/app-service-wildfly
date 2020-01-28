@@ -26,7 +26,8 @@ Outline the file contents of the repository.
 
 | File/folder       | Description                                |
 |-------------------|--------------------------------------------|
-| `tmp`             | Files that are copied to the container image during build |
+| `tmp/`            | Files that are copied to the container image during build |
+| `sample/`         | A sample application to build and deploy onto the image |
 | `.gitignore`      | Define what to ignore at commit time.      |
 | `CHANGELOG.md`    | List of changes to the sample.             |
 | `CONTRIBUTING.md` | Guidelines for contributing to the sample. |
